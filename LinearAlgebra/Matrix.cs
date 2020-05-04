@@ -1,119 +1,10 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace LinearAlgebra
 {
     public delegate double MatrixInitializer(int row, int column);
     public delegate double MatrixInitializer2(int row, int column, int rows, int columns);
 
-    
-    class Vector
-    {
-        /// <summary>
-        /// The amount of components the vector has.
-        /// </summary>
-        public int Dimensions { get; private set; }
-        
-        /// <summary>
-        /// Indexer for getting a component of the vector.
-        /// </summary>
-        /// <param name="index"></param>
-        public double this[int index]
-        {
-            get => components[index - 1];
-            set => components[index - 1] = value;
-        }
-        
-        /// <summary>
-        /// Internal array of components.
-        /// </summary>
-        private double[] components;
-
-        /// <summary>
-        /// Creates a vector from an 1D array.
-        /// </summary>
-        /// <param name="components"></param>
-        public Vector(double[] components)
-        {
-            Dimensions = components.Length;
-            this.components = components;
-        }
-        
-        /// <summary>
-        /// Creates a copy of a vector.
-        /// </summary>
-        /// <param name="source"></param>
-        public Vector(Vector source)
-        {
-            var newComps = new double[source.Dimensions];
-            Array.Copy(source.components, 0, newComps, 0, source.Dimensions);
-            Dimensions = source.Dimensions;
-            components = newComps;
-        }
-
-        /// <summary>
-        /// Converts a vector to a string [ a, b, ... ]
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            var str = "[ ";
-            for (int i = 1; i <= Dimensions; i++)
-            {
-                str += $"{this[i]} ";
-            }
-
-            str += "]";
-            
-            return str;
-        }
-        
-        /// <summary>
-        /// Multiplies each component of the vector by a scalar.
-        /// </summary>
-        /// <param name="scale"></param>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static Vector operator *(double scale, Vector a)
-        {
-            var b = new Vector(a);
-            for (int i = 1; i <= b.Dimensions; i++)
-            {
-                b[i] = scale * b[i];
-            }
-
-            return b;
-        }
-
-        /// <summary>
-        /// Multiplies each component of the vector by a scalar.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="scale"></param>
-        /// <returns></returns>
-        public static Vector operator *(Vector a, double scale)
-        {
-            return scale * a;
-        }
-
-        /// <summary>
-        /// Returns the dot product of the vectors.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public double Dot(Vector a)
-        {
-            Debug.Assert(Dimensions == a.Dimensions, "Vectors are not equal in dimensions.");
-            var sum = 0.0;
-            for (int i = 1; i <= Dimensions; i++)
-            {
-                sum += this[i] * a[i];
-            }
-
-            return sum;
-        }
-    }
-    
     class Matrix
     {        
         /// <summary>
@@ -262,6 +153,30 @@ namespace LinearAlgebra
                     row += $"{this[y, x]} \t";
                 }
                 row += "|";
+                if (y < Rows) row += "\n";
+                
+                str += row;
+            }
+            
+            return str;
+        }
+
+        /// <summary>
+        /// Converts matrix elements to an array string.
+        /// </summary>
+        /// <returns></returns>
+        public string ToArrayString()
+        {
+            var str = "";
+            for (int y = 1; y <= Rows; y++)
+            {
+                var row = "{";
+                for (int x = 1; x <= Columns; x++)
+                {
+                    row += $"{this[y, x]},";
+                }
+
+                row += "},";
                 if (y < Rows) row += "\n";
                 
                 str += row;
@@ -481,6 +396,19 @@ namespace LinearAlgebra
         public static double Increment(int row, int column, int rows, int columns)
         {
             return (row - 1) * columns + column;
+        }
+        
+        /// <summary>
+        /// Creates an identity matrix
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="column"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public static double Identity(int row, int column)
+        {
+            return row == column ? 1 : 0;
         }
     }
 }
