@@ -253,7 +253,7 @@ namespace LinearAlgebra
         /// <returns></returns>
         public override string ToString()
         {
-            var str = "";
+            var str = $"{Rows}x{Columns} Matrix:\n";
             for (int y = 1; y <= Rows; y++)
             {
                 var row = "|\t";
@@ -418,7 +418,7 @@ namespace LinearAlgebra
                 
                 var sum = 0.0;
                 var mult = 1;
-                for (int c = 1; c <= Columns - 2; c++)
+                for (int c = 1; c <= Columns; c++)
                 {
                     sum += mult * GetDeterminant(c);
                     mult *= -1;
@@ -436,12 +436,11 @@ namespace LinearAlgebra
         private double GetDeterminant(int ignoredColumn)
         {
             var subMatrix = new Matrix(Rows - 1, Columns - 1);
-            for (int r = 2; r <= Rows - 1; r++)
+            for (int r = 2; r <= Rows; r++)
             {
                 for (int c = 1; c <= Columns; c++)
                 {
                     if (c == ignoredColumn) continue;
-                    Console.WriteLine($"{r - 1}, {(c > ignoredColumn ? c - 1 : c)}");
                     subMatrix[r - 1, c > ignoredColumn ? c - 1 : c] = this[r, c];
                     // Ignores the skipped rows and columns and sets the values of the sub matrix
                     // XXX XXX XXX
@@ -449,6 +448,7 @@ namespace LinearAlgebra
                     // XAA AXA AAX
                 }
             }
+            //Console.WriteLine($"{this[1, ignoredColumn]} + {subMatrix}");
             return this[1, ignoredColumn] * subMatrix.Determinant;
         }
     }
