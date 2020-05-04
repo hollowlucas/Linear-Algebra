@@ -9,6 +9,16 @@ namespace LinearAlgebra
         /// The amount of components the vector has.
         /// </summary>
         public int Dimensions { get; private set; }
+
+        /// <summary>
+        /// Returns the square magnitude of the vector.
+        /// </summary>
+        public double SqrMagnitude => this.Dot(this);
+
+        /// <summary>
+        /// Returns the magnitude of the vector.
+        /// </summary>
+        public double Magnitude => Math.Sqrt(SqrMagnitude);
         
         /// <summary>
         /// Indexer for getting a component of the vector.

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace LinearAlgebra
 {
@@ -122,18 +123,18 @@ namespace LinearAlgebra
         /// <summary>
         /// Creates a copy of a matrix.
         /// </summary>
-        /// <param name="A"></param>
-        public Matrix(Matrix A)
+        /// <param name="source"></param>
+        public Matrix(Matrix source)
         {
-            Rows = A.Rows;
-            Columns = A.Columns;
-            elements = CreateElements(A.Rows, A.Columns);
+            Rows = source.Rows;
+            Columns = source.Columns;
+            elements = CreateElements(source.Rows, source.Columns);
             
             for (int r = 1; r <= Rows; r++)
             {
                 for (int c = 1; c <= Columns; c++)
                 {
-                    this[r, c] = A[r, c];
+                    this[r, c] = source[r, c];
                 }
             }
         }
@@ -318,7 +319,41 @@ namespace LinearAlgebra
             }
             return ret;
         }
+
+        /// <summary>
+        /// Checks if dimensions and all elements in the matrices are equal.
+        /// </summary>
+        private const double Error = 0.00001;
+        public static bool operator ==(Matrix A, Matrix B)
+        {
+            if (ReferenceEquals(A, B)) return true;
+            if (ReferenceEquals(A, null)) return false;
+            if (ReferenceEquals(B, null)) return false;
+            if (!A.SameDimensions(B)) return false;
+            
+            for (int r = 1; r <= A.Rows; r++)
+            {
+                for (int c = 1; c <= A.Columns; c++)
+                {
+                    if (Math.Abs(A[r, c] - B[r, c]) > Error)
+                        return false;
+                }
+            }
+
+            return true;
+        }
         
+        /// <summary>
+        /// Checks if the dimensions or elements in the matrices are different.
+        /// </summary>
+        /// <param name="A"></param>
+        /// <param name="B"></param>
+        /// <returns></returns>
+        public static bool operator !=(Matrix A, Matrix B)
+        {
+            return !(A == B);
+        }
+
         /// <summary>
         /// Returns the determinant of the matrix.
         /// Needs to be a square matrix.
@@ -365,6 +400,57 @@ namespace LinearAlgebra
             }
             //Console.WriteLine($"{this[1, ignoredColumn]} + {subMatrix}");
             return this[1, ignoredColumn] * subMatrix.Determinant;
+        }
+
+        /// <summary>
+        /// Switches row vectors and column vectors.
+        /// Reflects the matrix.
+        /// </summary>
+        /// <returns></returns>
+        public Matrix Transpose
+        {
+            get
+            {
+                var ret = new Matrix(Columns, Rows);
+                for (int r = 1; r <= Rows; r++)
+                {
+                    for (int c = 1; c <= Columns; c++)
+                    {
+                        ret[c, r] = this[r, c];
+                    }
+                }
+
+                return ret;
+            }
+        }
+
+        public Matrix Inverse
+        {
+            get
+            {
+                Debug.Assert(IsSquare, "Matrix must be square to inverse");
+                var determinant = Determinant;
+                Debug.Assert(determinant == 0, "Matrices with a determinant of 0 have no inverse");
+                if (Rows == 1) return new Matrix(new double[,] {{this[1, 1] / determinant}});
+                if (Rows == 2)
+                {
+                    return new Matrix(new double[,]
+                    {
+                        {this[2, 2] / determinant, -this[2, 1] / determinant},
+                        {-this[1, 2] / determinant, this[1, 1] / determinant},
+                    });
+                }
+
+                return null;
+            }
+        }
+        
+        public static Matrix operator ^(Matrix A, int exp)
+        {
+            Debug.Assert(exp == -1, "Inverse must be ^-1");
+            //return A.Transpose();
+            // Inverse
+            throw new NotImplementedException();
         }
     }
 
