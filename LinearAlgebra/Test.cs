@@ -9,8 +9,12 @@ namespace LinearAlgebra
         {
             var timer = new Stopwatch();
             timer.Start();
-            var A = new Matrix(2, 2, MatrixUtil.Increment);
-            Console.WriteLine(A.Inverse);
+
+            var a = new Vector(new double[] {1, 2, 0});
+            var b = new Vector(new double[] {2, 1, 0});
+            Console.WriteLine(a);
+            Console.WriteLine(b);
+            Console.WriteLine(a.Cross(b));
 
             timer.Stop();
             Console.WriteLine(timer.Elapsed);

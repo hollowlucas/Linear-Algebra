@@ -63,8 +63,8 @@ namespace LinearAlgebra
         /// <param name="dimensions"></param>
         public Vector(int dimensions)
         {
-            Dimensions = components.Length;
-            components = new double[Dimensions];
+            components = new double[dimensions];
+            Dimensions = dimensions;
         }
 
         /// <summary>
@@ -156,6 +156,26 @@ namespace LinearAlgebra
             }
 
             return sum;
+        }
+        
+        /// <summary>
+        /// Returns the angle between the vectors in radians.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public double Angle(Vector a)
+        {
+            return Math.Acos(Dot(a) / (Magnitude * a.Magnitude));
+        }
+        
+        public Vector Cross(Vector b)
+        {
+            Debug.Assert(Dimensions == b.Dimensions && Dimensions == 3, "Both vectors must be 3-dimensional");
+            var cross = new Vector(Dimensions);
+            cross[1] = this[2] * b[3] - this[3] * b[2];
+            cross[2] = this[3] * b[1] - this[1] * b[3];
+            cross[3] = this[1] * b[2] - this[2] * b[1];
+            return cross;
         }
     }
 }
