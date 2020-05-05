@@ -445,12 +445,21 @@ namespace LinearAlgebra
             }
         }
         
-        public static Matrix operator ^(Matrix A, int exp)
+        /// <summary>
+        /// Gets the dot product of the row vectors of the matrix with the vector.
+        /// Linear combination of column vectors, using the vector as the weights for each column vector.
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Vector operator *(Matrix A, Vector v)
         {
-            Debug.Assert(exp == -1, "Inverse must be ^-1");
-            //return A.Transpose();
-            // Inverse
-            throw new NotImplementedException();
+            var ret = new Vector(A.Rows);
+            for (int r = 1; r <= A.Rows; r++)
+            {
+                ret[r] = v.Dot(A.GetRowVector(r));
+            }
+
+            return ret;
         }
     }
 

@@ -10,11 +10,18 @@ namespace LinearAlgebra
             var timer = new Stopwatch();
             timer.Start();
 
-            var a = new Vector(new double[] {6, -4, 7});
-            var b = new Vector(new double[] {-3, -9, 8});
+            var a = new Matrix(new double[,]
+            {
+                {-3, 0, 3, 2},
+                {1, 7, -1, 9}
+            });
+            var b = new Vector(new double[]
+            {
+                1, 1, 0, 0
+            });
             Console.WriteLine(a);
             Console.WriteLine(b);
-            Console.WriteLine(a.Cross(b).Normalized);
+            Console.WriteLine(a * b);
 
             timer.Stop();
             Console.WriteLine(timer.Elapsed);

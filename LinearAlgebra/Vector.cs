@@ -201,5 +201,35 @@ namespace LinearAlgebra
             cross[3] = this[1] * b[2] - this[2] * b[1];
             return cross;
         }
+
+        /// <summary>
+        /// Converts the vector to a row vector (horizontal).
+        /// </summary>
+        /// <returns></returns>
+        public Matrix ToRow()
+        {
+            var ret = new Matrix(1, Dimensions);
+            for (int c = 1; c <= Dimensions; c++)
+            {
+                ret[1, c] = this[c];
+            }
+
+            return ret;
+        }
+        
+        /// <summary>
+        /// Converts the vector to a column vector (vertical).
+        /// </summary>
+        /// <returns></returns>
+        public Matrix ToColumn()
+        {
+            var ret = new Matrix(Dimensions, 1);
+            for (int r = 1; r <= Dimensions; r++)
+            {
+                ret[r, 1] = this[r];
+            }
+
+            return ret;
+        }
     }
 }
