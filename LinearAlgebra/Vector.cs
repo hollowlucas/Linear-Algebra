@@ -19,7 +19,25 @@ namespace LinearAlgebra
         /// Returns the magnitude of the vector.
         /// </summary>
         public double Magnitude => Math.Sqrt(SqrMagnitude);
-        
+
+        /// <summary>
+        /// Returns a new vector which is normalized
+        /// </summary>
+        public Vector Normalized
+        {
+            get
+            {
+                var ret = new Vector(this);
+                var mag = Magnitude;
+                for (int i = 1; i <= ret.Dimensions; i++)
+                {
+                    ret[i] /= mag;
+                }
+
+                return ret;
+            }
+        }
+
         /// <summary>
         /// Indexer for getting a component of the vector.
         /// </summary>
@@ -168,6 +186,12 @@ namespace LinearAlgebra
             return Math.Acos(Dot(a) / (Magnitude * a.Magnitude));
         }
         
+        /// <summary>
+        /// Returns a vector that is orthogonal to both vectors.
+        /// Only works with 3D vectors.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public Vector Cross(Vector b)
         {
             Debug.Assert(Dimensions == b.Dimensions && Dimensions == 3, "Both vectors must be 3-dimensional");
